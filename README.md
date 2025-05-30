@@ -43,5 +43,6 @@ In root folder, run `PYTHONPATH=backend pytest backend/tests`
 
 ## Frontend
 
-- `cd frontend`
-- Run `npm start`
+1. `cd frontend`
+2. `npm install`
+3. `npm run dev`
