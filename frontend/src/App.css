@@ -1,0 +1,27 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.card {
+  padding: 5em;
+}
+
+.text {
+  color: #4b4b4b;
+  text-align: left;
+}
+
+.sub-text {
+  color: #000000;
+  padding-bottom: 10px;
+}
+
+.ul {
+  margin-left: 2rem;
+  list-style-type: disc;
+  margin: 1rem 0;
+  text-align: center;
+}
