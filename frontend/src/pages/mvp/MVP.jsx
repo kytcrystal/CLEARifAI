@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import UploadForm from "./UploadForm";
 import RadarChart from "./RadarChart";
 import "../../App.css";
-import Mockup from "./MockUp";
+import Mockup from "./Mockup";
 
 function MVP() {
   const [jobId, setJobId] = useState(null);
