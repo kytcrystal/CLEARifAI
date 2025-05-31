@@ -7,8 +7,11 @@ from datetime import datetime
 
 from dotenv import load_dotenv
 load_dotenv()
-api_key = os.getenv("OPENROUTER_API_KEY")
+openrouter_api_key = os.getenv("OPENROUTER_API_KEY")
 openai_api_key = os.getenv("OPENAI_API_KEY")
+
+if not (openrouter_api_key or openai_api_key):
+    raise EnvironmentError("Set either OPENROUTER_API_KEY or OPENAI_API_KEY in environment variables.")
 
 now = datetime.now()
 timestamp = now.strftime("%Y-%m-%d_%H-%M-%S")
@@ -16,8 +19,10 @@ timestamp = now.strftime("%Y-%m-%d_%H-%M-%S")
 
 def evaluate_communication_with_prompt(json_prompt, folder_name):
     try:
-        completion = use_openai(json_prompt, "gpt-4.1-nano")
-        # completion = use_deepseek(json_prompt)
+        if openrouter_api_key:
+            completion = use_deepseek(json_prompt)
+        elif openai_api_key:
+            completion = use_openai(json_prompt, "gpt-4.1-nano")
         
         answer_file_prefix = folder_name + "/evaluate_communication"
         answer_text = completion.choices[0].message.content
@@ -38,7 +43,7 @@ def write_to_md(markdown_content, file_prefix):
 def use_deepseek(json_prompt):
     client = OpenAI(
             base_url="https://openrouter.ai/api/v1",
-            api_key=api_key,
+            api_key=openrouter_api_key,
         )
     completion = client.chat.completions.create(
         model="deepseek/deepseek-chat:free",
