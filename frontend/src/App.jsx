@@ -12,7 +12,7 @@ import Footer from "./components/Footer";
 
 export default function App() {
   return (
-    <Router>
+    <Router basename="/CLEARifAI">
       <Header />
       <Container sx={{ mt: 4 }}>
         <Routes>

@@ -1,8 +1,17 @@
-# agile-communicAItion
+# CLEARifAI
+
+Evaluation of effective team communication using AI technologies.
+
+Using the CLEAR Model in Modern Agile as a metric, team communication is evaluated using the following criteria:
+
+- 7 statements of psychological safety
+- 12 skills of active listening
+
+This project is in the early stage, starting from the simplest case of audio-based technologies. As it progresses, more technologies and fine tuning will be integrated to enhanve the evaluation results.
 
 ## Models Used
 
-### Sentiment Analysis
+### Text Sentiment/Emotion Analysis
 
 - Model option 1: [j-hartmann/emotion-english-distilroberta-base](https://huggingface.co/j-hartmann/emotion-english-distilroberta-base)
 - Model option 2: [bhadresh-savani/bert-base-go-emotion](https://huggingface.co/bhadresh-savani/bert-base-go-emotion)

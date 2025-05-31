@@ -18,14 +18,15 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 manager = JobFileManager()
 results = {}
+evaluate_with_LLM = True  # change this flag to False if not evaluating 
 
 @router.post("/upload")
-async def upload_video(file: UploadFile, background_tasks: BackgroundTasks):
+async def upload_video(file: UploadFile):
     try:
         job_id = str(uuid4())
         results[job_id] = {"status": "processing"}
         file_path = manager.save_uploaded_file(file, job_id)
-        background_tasks.add_task(process_file, file_path, job_id)
+        process_file(file_path, job_id)
         return {"job_id": job_id}
     except Exception as e:
         logger.error(f"error: {e}")
@@ -35,10 +36,10 @@ async def upload_video(file: UploadFile, background_tasks: BackgroundTasks):
 def process_file(path: str, job_id: str):
     try:
         logger.info(path)
-        audio_path = extract_audio_from_video(path)
-
         data_dir = "data/" + job_id
         
+        audio_path = extract_audio_from_video(path)
+
         results[job_id] = {
             "status": "uploaded",
             "video_file": path,
@@ -49,8 +50,6 @@ def process_file(path: str, job_id: str):
     except Exception as e:
         results[job_id] = {"status": "error", "error": str(e)}
         raise
-    # finally:
-    #     os.remove(path)
 
 @router.post("/load/{job_id}")
 async def load(job_id: str):
@@ -148,10 +147,26 @@ def tone_analysis(job_id: str, min_speakers: int = Query(0), max_speakers: int =
     }
     
 @router.post("/evaluate_communication/{job_id}")
-def tone_analysis(job_id: str, min_speakers: int = Query(0), max_speakers: int = Query(0)):
+def evaluation_communication(job_id: str, min_speakers: int = Query(0), max_speakers: int = Query(0)):
     job = results.get(job_id)
     if not job:
         raise HTTPException(status_code=404, detail="Job ID not found.")
+    
+    if not evaluate_with_LLM:
+        text = '''
+        ```json
+        {
+        "C": 0.7,
+        "L": 0.5,
+        "E": 0.8,
+        "A": 0.6,
+        "R": 0.6
+        }
+        ```
+        '''
+        return {
+            "evaluate_communication": text
+        }
     
     if "evaluate_communication" not in job:
         step_evaluate_communication(min_speakers, max_speakers, job)
@@ -238,7 +253,7 @@ def step_evaluate_communication(min_speakers, max_speakers, job):
         
     prompt = create_prompt(job["merged_speaker_transcript"], job["folder"])
     
-    answer = evaluate_communication_with_prompt(prompt, job["folder"])
+    answer = evaluate_communication_with_prompt(prompt, job["folder"])     
     
     job["evaluate_communication"] = answer
     

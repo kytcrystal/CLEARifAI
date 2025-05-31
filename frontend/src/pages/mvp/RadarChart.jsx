@@ -5,7 +5,6 @@ function RadarChart({ values }) {
   const chartRef = useRef(null);
 
   useEffect(() => {
-    console.log("Radar values:", values);
 
     if (!values) return;
 
@@ -14,12 +13,13 @@ function RadarChart({ values }) {
     const option = {
       title: {
         text: "CLEAR Radar Chart",
-        left: "center",
+        left: "left",
         textStyle: {
-          fontSize: 22,
+          fontSize: 20,
+          color: "white"
         },
       },
-      backgroundColor: "#f0f0f0",
+      backgroundColor: "#21264c",
       tooltip: {},
       radar: {
         indicator: [
@@ -30,6 +30,7 @@ function RadarChart({ values }) {
           { name: "R", max: 1 },
         ],
         radius: "80%",
+        center: ['50%', '50%']
       },
       series: [
         {

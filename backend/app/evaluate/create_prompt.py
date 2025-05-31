@@ -53,7 +53,18 @@ def create_prompt(transcript, data_dir):
         
         Can you provide a score from 0 to 1 for each of the 5 areas. 
         0 signifies that little apitude is shown while 1 signifies exemplary performance. 
-        Could you include the final scores at the end of the response in a json format for each of the C,L,E,A,R.
+        Give a brief explanation of your score.
+        At the end, can you provide 3 recommendations for improvements using the evaluation criteria.
+        Could you include the final scores at the end of the response in a json block like 
+        ```json
+        {
+            "C": ,
+            "L": ,
+            "E": ,
+            "A": ,
+            "R": 
+            }
+        ```
         '''
         
         json_prompt = {
