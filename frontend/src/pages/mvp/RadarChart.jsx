@@ -1,4 +1,3 @@
-// RadarChart.jsx
 import React, { useEffect, useRef } from "react";
 import * as echarts from "echarts";
 
