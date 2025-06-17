@@ -14,8 +14,8 @@ def create_prompt(transcript, data_dir):
         details["transcript"] = transcript
         
         context = '''
-        Can you evaluate the effectiveness of this team communication
-        based on the CLEAR model?
+        Can you evaluate the team communication using the meeting transcript and the speech emotions identified?
+        Use the CLEAR model to evaluate.
         
         C stands for Curious, Caring & Open-Minded
         Evaluation of 'C' are when team members
@@ -29,10 +29,8 @@ def create_prompt(transcript, data_dir):
         
         L stands for Listen To One Another
         Evaluation of 'L' are when team members
-        - Pay attention to other team members
-        - Look at who is talking
-        - Observe other's body language
-        - Avoid distractions
+        - Pay attention to what other team members are saying
+        - Avoid distractions or distracting others
 
         E stands for Encourage Everyone To Contribute
         Evaluation of 'E' are when team members
@@ -43,15 +41,16 @@ def create_prompt(transcript, data_dir):
 
         A stands for Avoid Dominating or Interrupting.
         Evaluation of 'A' are when team members
-        - Be self-aware that they are speaking too much
+        - Have self-awareness and allow others to speak
         - Not interrupt others
 
         R stands for Repeat & Review People’s Points.
         Evaluation of 'R' are when team members
-        - Paraphrase team member's words
+        - Paraphrase team member's sentences
         - Request clarification when in doubt
         
         Can you provide a score from 0 to 1 for each of the 5 areas. 
+        Evaluate based on criterias that are present in the transcript.
         0 signifies that little apitude is shown while 1 signifies exemplary performance. 
         Give a brief explanation of your score.
         At the end, can you provide 3 recommendations for improvements using the evaluation criteria.
