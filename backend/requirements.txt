@@ -68,6 +68,7 @@ networkx==3.4.2
 nltk==3.9.1
 numba==0.61.2
 numpy==2.2.6
+ollama==0.5.1
 omegaconf==2.3.0
 openai==1.82.0
 openai-whisper==20240930
