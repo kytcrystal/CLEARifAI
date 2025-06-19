@@ -10,28 +10,36 @@ load_dotenv()
 openrouter_api_key = os.getenv("OPENROUTER_API_KEY")
 openai_api_key = os.getenv("OPENAI_API_KEY")
 
-if not (openrouter_api_key or openai_api_key):
-    raise EnvironmentError("Set either OPENROUTER_API_KEY or OPENAI_API_KEY in environment variables.")
 
 now = datetime.now()
 timestamp = now.strftime("%Y-%m-%d_%H-%M-%S")
 
 
-def evaluate_communication_with_prompt(json_prompt, folder_name):
+def evaluate_communication_with_prompt(json_prompt, folder_name, model):
     try:
-        if openrouter_api_key:
+        if "deepseek" in model:
+            if not openrouter_api_key:
+                raise EnvironmentError("Set OPENROUTER_API_KEY in environment variables.")
+            logger.info("Using Deepseek API")
             completion = use_deepseek(json_prompt)
-        elif openai_api_key:
+        elif model == "gpt-4.1-nano":
+            if not openai_api_key:
+                raise EnvironmentError("Set OPENAI_API_KEY in environment variables.")
+            logger.info("Using OPENAI API")
             completion = use_openai(json_prompt, "gpt-4.1-nano")
+        else:
+            logger.info("Model not found")
+            return
         
         answer_file_prefix = folder_name + "/evaluate_communication"
         answer_text = completion.choices[0].message.content
         write_to_md(answer_text, answer_file_prefix)
-        print(completion)
+        logger.info(completion)
         return answer_text
 
     except Exception as e:
         logger.error(f"error: {e}")
+        raise
 
 def write_to_md(markdown_content, file_prefix):
     output_path = file_prefix + ".md"

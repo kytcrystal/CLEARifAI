@@ -3,12 +3,14 @@ from uuid import uuid4
 from .processing.audio import extract_audio_from_video
 from .processing.transcribe import transcribe_audio, parse_txt
 from .processing.diarize import diarize_audio, parse_rttm
-from .processing.merging import merge_transcript_speaker_segments_to_json, assign_speakers_to_transcript_to_json
+from .processing.merging import merge_transcript_speaker_segments_to_json, assign_speakers_to_transcript_to_json, merge_transcript_with_tone_to_json
 from .analysis.text_emotion_analysis import emotion_from_text
 from .analysis.tone_analysis import emotion_from_tone
 from .analysis.text_sentiment_analysis import sentiment_from_text
 from .evaluate.create_prompt import create_prompt
+from .evaluate.create_multi_turn_prompt import create_multi_turn_prompt
 from .evaluate.prompt_llm import evaluate_communication_with_prompt
+from .evaluate.prompt_local_llm import evaluate_communication_with_prompt_os
 from .utils.file_manager import JobFileManager
 import os
 import logging
@@ -69,7 +71,7 @@ def check_job_exists_and_load_job(job_id):
         results[job_id] = manager.load_job_data(job_id)
         return {"loaded": list(results[job_id].keys())}
     else: 
-        raise HTTPException(status_code=404, detail="Job ID not found.")
+        raise HTTPException(status_code=404, detail="here Job ID not found.")
 
 
 @router.post("/transcribe/{job_id}")
@@ -147,7 +149,7 @@ def tone_analysis(job_id: str, min_speakers: int = Query(0), max_speakers: int =
     }
     
 @router.post("/evaluate_communication/{job_id}")
-def evaluation_communication(job_id: str, min_speakers: int = Query(0), max_speakers: int = Query(0)):
+def evaluation_communication(job_id: str, min_speakers: int = Query(0), max_speakers: int = Query(0), model: str = "deepseek-chat:free"):
     job = results.get(job_id)
     if not job:
         raise HTTPException(status_code=404, detail="Job ID not found.")
@@ -169,7 +171,7 @@ def evaluation_communication(job_id: str, min_speakers: int = Query(0), max_spea
         }
     
     if "evaluate_communication" not in job:
-        step_evaluate_communication(min_speakers, max_speakers, job)
+        step_evaluate_communication(min_speakers, max_speakers, job, model)
         
     return {
         "evaluate_communication": job["evaluate_communication"]
@@ -237,23 +239,32 @@ def step_tone_analysis(min_speakers, max_speakers, job):
     if "speaker_transcript" not in job:
         step_speaker_transcript(min_speakers, max_speakers, job)
     
+    if "merged_speaker_transcript" not in job:
+        _, job["merged_speaker_transcript"] = merge_transcript_speaker_segments_to_json(job["speaker_transcript"], job["folder"])
+    
     audio_path = job["audio_file"]
     
-    _, tone_analysis = emotion_from_tone(audio_path, job["speaker_transcript"], job["folder"])
+    _, tone_analysis = emotion_from_tone(audio_path, job["merged_speaker_transcript"], job["folder"])
     job["tone_analysis"] = tone_analysis
     
     
-def step_evaluate_communication(min_speakers, max_speakers, job):
+def step_evaluate_communication(min_speakers, max_speakers, job, model):
     
-    if "speaker_transcript" not in job:
-        step_speaker_transcript(min_speakers, max_speakers, job)
-    
-    if "merged_speaker_transcript" not in job:
-        _, job["merged_speaker_transcript"] = merge_transcript_speaker_segments_to_json(job["speaker_transcript"], job["folder"])
+    if "tone_analysis" not in job:
+        step_tone_analysis(min_speakers, max_speakers, job)
         
-    prompt = create_prompt(job["merged_speaker_transcript"], job["folder"])
+    if "transcript_with_tone" not in job:
+        _, job["transcript_with_tone"] = merge_transcript_with_tone_to_json(job["merged_speaker_transcript"], job["tone_analysis"], job["folder"])
     
-    answer = evaluate_communication_with_prompt(prompt, job["folder"])     
+    
+    if "gemma3" in model:
+        transcript, context = create_multi_turn_prompt(job["merged_speaker_transcript"], job["folder"])
+        
+        answer = evaluate_communication_with_prompt_os(transcript, context, job["folder"], model)     
+    else:
+        prompt = create_prompt(job["merged_speaker_transcript"], job["folder"])
+        
+        answer = evaluate_communication_with_prompt(prompt, job["folder"], model)     
     
     job["evaluate_communication"] = answer
     

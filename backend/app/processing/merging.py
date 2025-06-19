@@ -53,6 +53,23 @@ def merge_by_speaker(segments, max_words=350):
     return merged_chunks
 
 
+def merge_by_time(transcript, tone_data):
+    tone_map = {"hap": "happy", "neu": "neutral", "ang": "angry", "sad": "sad"}
+    for t in transcript:
+        t_start = t["start"]
+        t_end = t["end"]
+
+        for tone_entry in tone_data:
+            tone_start = tone_entry["start"]
+            tone_end = tone_entry["end"]
+
+            if t_start == tone_start and tone_end == t_end:
+                audio_tone = tone_entry["tone"]
+                if audio_tone in tone_map:
+                    t["tone"] = tone_map[audio_tone]
+    return transcript
+
+
 def split_if_too_long(segment, max_words):
     words = segment["text"].split()
     chunks = []
@@ -78,6 +95,12 @@ def assign_speakers_to_transcript_to_json(transcript_segments, speaker_segments,
 def merge_transcript_speaker_segments_to_json(speaker_transcript_segments, data_dir):
     merged_segments = merge_by_speaker(speaker_transcript_segments)
     file_prefix = data_dir + "/merged_speaker_transcript"
+    return write_to_json(merged_segments, file_prefix), merged_segments
+
+
+def merge_transcript_with_tone_to_json(speaker_transcript_segments, tone_segments, data_dir):
+    merged_segments = merge_by_time(speaker_transcript_segments, tone_segments)
+    file_prefix = data_dir + "/transcript_with_tone"
     return write_to_json(merged_segments, file_prefix), merged_segments
 
 
