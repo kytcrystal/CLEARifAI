@@ -16,7 +16,7 @@ function Mockup() {
       }}
     >
       <Typography variant="body1" sx={{ mb: 2 }}>
-        This is a mockup. To try out the actual evaluation, you can:
+        Below is a mockup. To try out the actual evaluation, you can:
       </Typography>
 
       <Stack
