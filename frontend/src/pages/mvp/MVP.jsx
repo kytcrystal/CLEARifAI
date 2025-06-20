@@ -68,12 +68,31 @@ function MVP() {
             </Typography>
             <Typography variant="subtitle1" gutterBottom>
               Each aspect of CLEAR Model is given a score between 0 and 1
-              <Stack component="ul">
-                <li>C - Curious, caring and open-minded</li>
-                <li>L - Listen to one another</li>
-                <li>E - Encourage everyone to contribute</li>
-                <li>A - Avoid dominating or interrupting</li>
-                <li>R - Repeat and review people’s points</li>
+              <Stack
+                component="ul"
+                sx={{
+                  width: "fit-content",
+                  margin: "0 auto",
+                  paddingLeft: 0,
+                  listStylePosition: "outside",
+                  textAlign: "left",
+                }}
+              >
+                <li>
+                  <strong>C</strong> - Curious, caring and open-minded
+                </li>
+                <li>
+                  <strong>L</strong> - Listen to one another
+                </li>
+                <li>
+                  <strong>E</strong> - Encourage everyone to contribute
+                </li>
+                <li>
+                  <strong>A</strong> - Avoid dominating or interrupting
+                </li>
+                <li>
+                  <strong>R</strong> - Repeat and review people’s points
+                </li>
               </Stack>
             </Typography>
 
@@ -86,6 +105,14 @@ function MVP() {
                 R: 0.8,
               }}
             />
+            <Box sx={{ mt: 3 }}>
+              <Typography variant="subtitle2" gutterBottom>
+                <strong>SCORES:</strong>
+              </Typography>
+              <strong>C</strong> - 0.8 | <strong>L</strong> - 0.9 |{" "}
+              <strong>E</strong> - 0.7 | <strong>A</strong> - 0.6 |{" "}
+              <strong>R</strong> - 0.8
+            </Box>
           </Box>
 
           <Box

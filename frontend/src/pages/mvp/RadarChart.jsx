@@ -12,7 +12,7 @@ function RadarChart({ values }) {
 
     const option = {
       title: {
-        text: "CLEAR Radar Chart",
+        // text: "CLEAR Radar Chart",
         left: "left",
         textStyle: {
           fontSize: 20,
@@ -76,7 +76,7 @@ function RadarChart({ values }) {
         width: "100%",
         maxWidth: "600px",
         height: "400px",
-        margin: "2rem auto",
+        margin: "1rem auto",
       }}
     />
   );

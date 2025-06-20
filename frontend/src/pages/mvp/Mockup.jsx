@@ -15,13 +15,21 @@ function Mockup() {
         backgroundColor: "#f9f9f9",
       }}
     >
-
       <Typography variant="body1" sx={{ mb: 2 }}>
-        This is a mockup.
-        To try out the actual evaluation, you can:
+        This is a mockup. To try out the actual evaluation, you can:
       </Typography>
 
-      <Stack spacing={1} component="ul">
+      <Stack
+        spacing={1}
+        component="ul"
+        sx={{
+          width: "fit-content",
+          margin: "0 auto",
+          paddingLeft: 0,
+          listStylePosition: "outside",
+          textAlign: "left",
+        }}
+      >
         <li>
           <Typography variant="body2">
             <Link href="mailto:yatingcrystal.kwok@student.unibz.it">
