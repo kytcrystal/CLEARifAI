@@ -56,3 +56,8 @@ In root folder, run `PYTHONPATH=backend pytest backend/tests`
 2. `npm install`
 3. `npm run dev`
 4. Navigate to `http://localhost:5173/CLEARifAI/`
+
+## Publishing Changes in Frontend
+
+1. `npm run build`
+2. `npm run deploy`
