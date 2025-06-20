@@ -15,20 +15,13 @@ function Mockup() {
         backgroundColor: "#f9f9f9",
       }}
     >
-      <Typography variant="h5" gutterBottom>
-        Team Communication Evaluation
-      </Typography>
 
       <Typography variant="body1" sx={{ mb: 2 }}>
-        This is a mockup. To try out the actual evaluation, you can:
+        This is a mockup.
+        To try out the actual evaluation, you can:
       </Typography>
 
-      <Stack spacing={1} component="ul" sx={{ pl: 3 }}>
-        <li>
-          <Typography variant="body2">
-            Look for me at XP 2025 Conference
-          </Typography>
-        </li>
+      <Stack spacing={1} component="ul">
         <li>
           <Typography variant="body2">
             <Link href="mailto:yatingcrystal.kwok@student.unibz.it">
