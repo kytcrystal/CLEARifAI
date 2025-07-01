@@ -1,5 +1,6 @@
 import re
 import whisper
+from .json_io import write_to_json
 import logging
 logger = logging.getLogger(__name__)
     
@@ -12,7 +13,7 @@ def transcribe_audio(file_path, data_dir, model_size="small", language="en"):
         model = whisper.load_model(model_size)
         result = model.transcribe(file_path, language=language)
 
-        output_file = data_dir + "/transcript.txt"
+        output_file = data_dir + "/transcript_raw.txt"
 
         with open(output_file, "w", encoding="utf-8") as f:
             for segment in result["segments"]:
@@ -39,7 +40,7 @@ def format_timestamp(seconds):
     return f"[{minutes:02d}:{seconds_remainder:05.2f}]"
 
 
-def parse_txt(file_path):
+def parse_txt(file_path, data_dir):
     segments = []
     time_pattern = re.compile(r"\[(\d+:\d+\.\d+)\] \[(\d+:\d+\.\d+)\] (.+)")
 
@@ -57,7 +58,9 @@ def parse_txt(file_path):
                     "text": text
                 })
 
-    return segments
+    file_prefix = data_dir + "/transcript"
+
+    return write_to_json(segments, file_prefix), segments
 
 
 def timestamp_to_seconds(hhmmss):

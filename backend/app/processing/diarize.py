@@ -1,5 +1,6 @@
 import os
 from pyannote.audio import Pipeline
+from .json_io import write_to_json
 import logging
 logger = logging.getLogger(__name__)
 
@@ -22,7 +23,7 @@ def diarize_audio(file_path, data_dir, min_speakers, max_speakers):
         else: 
             diarization = pipeline(file_path, min_speakers=min_speakers, max_speakers=max_speakers)
         
-        rttm_file_path = data_dir + "/diarization.rttm"
+        rttm_file_path = data_dir + "/speakers_raw.rttm"
         with open(rttm_file_path, "w") as rttm:
             diarization.write_rttm(rttm)
             
@@ -33,7 +34,7 @@ def diarize_audio(file_path, data_dir, min_speakers, max_speakers):
         logger.error(f"error during diarization: {e}")
         raise
 
-def parse_rttm(file_path):
+def parse_rttm(file_path, data_dir):
     segments = []
 
     with open(file_path, "r") as file:
@@ -49,5 +50,7 @@ def parse_rttm(file_path):
                     "speaker": parts[7]
                 }
                 segments.append(segment)
+                
+    file_prefix = data_dir + "/speakers"
 
-    return segments
+    return write_to_json(segments, file_prefix), segments

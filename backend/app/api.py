@@ -186,15 +186,13 @@ def job_exists_locally(job_id: str, base_dir="data") -> bool:
 def step_transcribe(job):
     path = job["audio_file"]
     transcript_file = transcribe_audio(path, job["folder"])
-    transcript = parse_txt(transcript_file)
-    job["transcript"] = transcript
+    _, job["transcript"] = parse_txt(transcript_file, job["folder"])
     
     
 def step_diarize(min_speakers, max_speakers, job):
     path = job["audio_file"]
     rttm_file = diarize_audio(path, job["folder"], min_speakers, max_speakers)
-    segments = parse_rttm(rttm_file)
-    job["speakers"] = segments
+    _, job["speakers"] = parse_rttm(rttm_file, job["folder"])
     
 
 def step_speaker_transcript(min_speakers, max_speakers, job):
@@ -242,20 +240,20 @@ def step_tone_analysis(min_speakers, max_speakers, job):
     if "merged_speaker_transcript" not in job:
         _, job["merged_speaker_transcript"] = merge_transcript_speaker_segments_to_json(job["speaker_transcript"], job["folder"])
     
-    audio_path = job["audio_file"]
     
-    _, tone_analysis = emotion_from_tone(audio_path, job["merged_speaker_transcript"], job["folder"])
-    job["tone_analysis"] = tone_analysis
-    
+    if "transcript_with_tone" not in job:
+        audio_path = job["audio_file"]
+        
+        _, tone_analysis = emotion_from_tone(audio_path, job["merged_speaker_transcript"], job["folder"])
+        job["tone_analysis"] = tone_analysis
+        
+        _, job["transcript_with_tone"] = merge_transcript_with_tone_to_json(job["merged_speaker_transcript"], job["tone_analysis"], job["folder"])
+        
     
 def step_evaluate_communication(min_speakers, max_speakers, job, model):
     
-    if "tone_analysis" not in job:
-        step_tone_analysis(min_speakers, max_speakers, job)
-        
     if "transcript_with_tone" not in job:
-        _, job["transcript_with_tone"] = merge_transcript_with_tone_to_json(job["merged_speaker_transcript"], job["tone_analysis"], job["folder"])
-    
+        step_tone_analysis(min_speakers, max_speakers, job)
     
     if "gemma3" in model:
         transcript, context = create_multi_turn_prompt(job["transcript_with_tone"], job["folder"])
