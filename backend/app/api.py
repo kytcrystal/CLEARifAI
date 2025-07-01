@@ -258,7 +258,7 @@ def step_evaluate_communication(min_speakers, max_speakers, job, model):
     
     
     if "gemma3" in model:
-        transcript, context = create_multi_turn_prompt(job["merged_speaker_transcript"], job["folder"])
+        transcript, context = create_multi_turn_prompt(job["transcript_with_tone"], job["folder"])
         
         answer = evaluate_communication_with_prompt_os(transcript, context, job["folder"], model)     
     else:
