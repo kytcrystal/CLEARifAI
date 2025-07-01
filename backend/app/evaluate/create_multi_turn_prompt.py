@@ -15,8 +15,9 @@ def create_multi_turn_prompt(transcript, data_dir):
         
         context = '''
         The previous message is a transcript of a meeting and the identified speech emotions.
-        You are to evaluate the team communication using the meeting transcript and the speech emotions.
-        Do not give me a summary of the meeting. Evaluate the meeting based on the CLEAR model below.
+        You are to evaluate the team communication using the meeting transcript and the tone of speech.
+        Do not give me a summary of the meeting. Evaluate the meeting based on the CLEAR model and the evaluation criteria below.
+        Evaluate based on the whole team.  Do not single out individual team members.
         
         CLEAR Model
         C stands for Curious, Caring & Open-Minded
@@ -52,10 +53,10 @@ def create_multi_turn_prompt(transcript, data_dir):
         - Request clarification when in doubt
         
         Can you provide a score from 0 to 1 for each of the 5 areas. 
-        Evaluate based on criterias that are present in the transcript and evaluate based on the whole team. Do not single out individual team members.
         0 signifies that little apitude is shown while 1 signifies exemplary performance. Give a brief explanation of your score.
         Can you provide areas that the team did well in.
         Then, provide recommendations for improvements if needed. Each recommendation should be a summarised 1 sentence. Do not single out individual team members.
+        Do not use phrases like "Active listening", "Psychological safety" in the recommendation. 
         Could you include the final scores at the end of the response in a json block like 
         ```json
         {
