@@ -23,12 +23,12 @@ def create_multi_turn_prompt(transcript, data_dir):
         C stands for Curious, Caring & Open-Minded
         Evaluate if team members
         - Ask open-ended questions
-        - Show empathy
+        - Show empathy to one another
         - Are not defensive
-        - Withhold their judgement
-        - If others on the team make a mistake, it is not held against them
-        - If it is not difficult to ask other members of this team for help
-        - If no one on this team show that they would deliberately act in a way that undermines their team member's efforts
+        - Withhold their judgement about other members or situations
+        - Create an environment where if others on the team make a mistake, it is not held against them
+        - Create an environment where it is not difficult to ask other members of the team for help
+        - Show that they would not deliberately act in a way that undermines their team member's efforts
         
         L stands for Listen To One Another
         Evaluate if team members
@@ -37,14 +37,14 @@ def create_multi_turn_prompt(transcript, data_dir):
 
         E stands for Encourage Everyone To Contribute
         Evaluate if team members
-        - Are able to bring up problems and tough issues
+        - Create an environment where it is possible to bring up problems and tough issues
         - Do not reject others for being different
-        - Feel safe to take a risk in this team
+        - Create an environment where it feels safe to take a risk in this team
         - Value and utilize other team member's unique skills and talents
 
         A stands for Avoid Dominating or Interrupting.
         Evaluate if team members
-        - Have self-awareness and allow others to speak
+        - Have self-awareness and allow others to speak when needed
         - Not interrupt others
 
         R stands for Repeat & Review People’s Points.

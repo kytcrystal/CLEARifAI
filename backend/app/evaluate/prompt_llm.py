@@ -31,7 +31,7 @@ def evaluate_communication_with_prompt(json_prompt, folder_name, model):
             logger.info("Model not found")
             return
         
-        answer_file_prefix = folder_name + "/evaluate_communication"
+        answer_file_prefix = folder_name + "/evaluate_communication_" + model
         answer_text = completion.choices[0].message.content
         write_to_md(answer_text, answer_file_prefix)
         logger.info(completion)

@@ -18,7 +18,7 @@ def evaluate_communication_with_prompt_os(transcript, context, folder_name, mode
         logger.info("\n=== GEMMA'S RESPONSE ===\n")
         logger.info(response.message.content)
         
-        answer_file_prefix = folder_name + "/evaluate_communication"
+        answer_file_prefix = folder_name + "/evaluate_communication_" + model
         answer_text = response.message.content
         write_to_md(answer_text, answer_file_prefix)
         return answer_text
