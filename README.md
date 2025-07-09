@@ -1,30 +1,41 @@
 # CLEARifAI
 
-Evaluation of effective team communication using AI technologies.
+This is a thesis project to evaluate the quality of team communication in meetings using AI technologies.
 
 Using the CLEAR Model in Modern Agile as a metric, team communication is evaluated using the following criteria:
 
 - 7 statements of psychological safety
 - 12 skills of active listening
 
-This project is in the early stage, starting from the simplest case of audio-based technologies. As it progresses, more technologies and fine tuning will be integrated to enhanve the evaluation results.
+## Evaluation Components
 
-## Models Used
+Team communication in meetings are evaluated only based on the audio recording. The process flowchart is shown below. 
 
-### Text Sentiment/Emotion Analysis
+![Process flowchart](/media/process-flowchart.png)
 
-- Model option 1: [j-hartmann/emotion-english-distilroberta-base](https://huggingface.co/j-hartmann/emotion-english-distilroberta-base)
-- Model option 2: [bhadresh-savani/bert-base-go-emotion](https://huggingface.co/bhadresh-savani/bert-base-go-emotion)
-- Model option 3: [monologg/bert-base-cased-goemotions-original](https://huggingface.co/monologg/bert-base-cased-goemotions-original)
+The steps involved are as follows:
 
-### Tone Analysis
+1. Convert video meeting to audio (if needed).
+2. From audio file, transcribe speech to text.
+3. From audio file, identify speaker of each speech.
+4. From audio file, classify emotions of each segment of speech.
+5. Combine the above 3 components into a transcript with emotion labels.
+6. Based on the transcript, evaluate quality of team communication using a chosen Large Language Model.
+7. Generate score on each aspect of CLEAR, positive areas of team communication and recommendations for improvements.
 
-- Model: [superb/wav2vec2-base-superb-er](https://huggingface.co/superb/wav2vec2-base-superb-er)
-- Paper: [SUPERB: Speech processing Universal PERformance Benchmark](https://arxiv.org/abs/2105.01051)
-- Emotion classes: neutral, happy, sad, angry
+The score on the 5 CLEAR aspects can be reflected in the CLEAR Radar Chart. An example is shown below.
 
+![Radar Chart](/media/radar-chart.png)
 
-## Backend 
+## Technologies Used
+
+- Audio conversion: [PyDub Library](https://pypi.org/project/pydub/)
+- Transcription: [OpenAI Whisper](https://github.com/openai/whisper)
+- Speaker Diarization: [PyAnnote](https://huggingface.co/pyannote/speaker-diarization-3.1)
+- Speech Emotion Recognition: [SUPERB: Speech processing Universal PERformance Benchmark](https://huggingface.co/superb/wav2vec2-base-superb-er)
+- Team Communication Evaluation: [Gemma 3 Models](https://ai.google.dev/gemma/docs/core) for open source models
+
+## Backend
 
 ### Setting up
 
@@ -45,10 +56,6 @@ This project is in the early stage, starting from the simplest case of audio-bas
 1. Run `uvicorn app.main:app --reload`
 2. Navigate to `http://127.0.0.1:8000/docs`
   
-### Running Tests
-
-In root folder, run `PYTHONPATH=backend pytest backend/tests`
-
 
 ## Frontend
 
